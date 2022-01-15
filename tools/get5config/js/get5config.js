@@ -149,6 +149,8 @@ function validateInputs() {
 
 function assembleConfig() {
     let matchConfig = Object.assign({}, get5MatchConfig);
+    matchConfig.maplist = [];
+    matchConfig.map_sides = [];
     let otherTeam = Object.assign({}, opposingTeam);
 
     let homeAway = document.querySelector('input[name="match-home-away"]:checked').value;

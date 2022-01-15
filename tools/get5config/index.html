@@ -5,42 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Daniel Hillerström">
     <title>Fab5 CS:GO competitive match config generator</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
   </head>
   <body>
     <h1>Fab5 CS:GO competitive BO1 match config generator</h1>
-    <p>
-      Home or away game?
-      <input type="radio" id="home" name="match-home-away" value="home" onclick="suggestConfigFilename();">
-      <label for="home">Home</label>
-      <input type="radio" id="away" name="match-home-away" value="away" onclick="suggestConfigFilename();">
-      <label for="away">Away</label>
-    </p>
-    <p>
-      Opposing team name: <input type="text" value="" name="opposing-team-name" id="opposing-team-name" onkeyup="suggestConfigFilename();">
-    </p>
-    <p>
-      Config filename: <input type="text" value="" name="config-filename" id="config-filename">
-    </p>
-    <p>
-      Map:
-      <select id="maps" name="maps">
-        <option value="de_ancient">Ancient</option>
-        <option value="de_dust2">Dust2</option>
-        <option value="de_inferno">Inferno</option>
-        <option value="de_mirage">Mirage</option>
-        <option value="de_nuke">Nuke</option>
-        <option value="de_overpass">Overpass</option>
-        <option value="de_vertigo">Vertigo</option>
-      </select>
-    </p>
-    <p>
-      Fab5 starting side
-      <input type="radio" id="counter-terrorists" name="starting-side" value="ct">
-      <label for="counter-terrorists">Counter-terrorists</label>
-      <input type="radio" id="terrorists" name="starting-side" value="t">
-      <label for="terrorists">Terrorists</label>
-    </p>
-    <button onclick="generateConfig();">Submit</button>
+    <div class="form-grid">
+      <span class="label">
+        Home or away game?
+      </span>
+      <span class="input">
+        <ul>
+          <li>
+            <input type="radio" id="home" name="match-home-away" value="home" onclick="suggestConfigFilename();">
+            <label for="home">Home</label>
+          </li>
+          <li>
+            <input type="radio" id="away" name="match-home-away" value="away" onclick="suggestConfigFilename();">
+            <label for="away">Away</label>
+          </li>
+        </ul>
+      </span>
+      <span class="label">
+        Opposing team name:
+      </span>
+      <span class="input">
+        <input type="text" value="" name="opposing-team-name" id="opposing-team-name" onkeyup="suggestConfigFilename();">
+      </span>
+      <span class="label">
+        Config filename:
+      </span>
+      <span class="input">
+        <input type="text" value="" name="config-filename" id="config-filename">
+      </span>
+      <span class="label">
+        Map:
+      </span>
+      <span class="input">
+        <select id="maps" name="maps">
+          <option value="de_ancient">Ancient</option>
+          <option value="de_dust2">Dust2</option>
+          <option value="de_inferno">Inferno</option>
+          <option value="de_mirage">Mirage</option>
+          <option value="de_nuke">Nuke</option>
+          <option value="de_overpass">Overpass</option>
+          <option value="de_vertigo">Vertigo</option>
+        </select>
+      </span>
+      <span class="label">
+        Fab5 starting side
+      </span>
+      <span class="input">
+        <ul>
+          <li>
+            <input type="radio" id="counter-terrorists" name="starting-side" value="ct">
+            <label for="counter-terrorists">Counter-terrorists</label>
+          </li>
+          <li>
+            <input type="radio" id="terrorists" name="starting-side" value="t">
+            <label for="terrorists">Terrorists</label>
+          </li>
+          </ul>
+      <button class="submit-button" onclick="generateConfig();">Submit</button>
+    </div>
     <!-- Load JS -->
     <script type="text/javascript" src="js/get5config.js">
     </script>

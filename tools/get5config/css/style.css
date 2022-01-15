@@ -1,0 +1,58 @@
+/**
+ * Stylesheet for Fab5 Get5 competitive match config generator.
+ */
+
+body {
+    font-size: 1.2rem;
+}
+
+input, select, button {
+    font-size: 1.2rem;
+}
+
+input[type=text] {
+    width: 30rem;
+}
+
+input[type=radio] {
+    transform: scale(1.5);
+    margin-right: 0.6em;
+}
+
+.input, select {
+    padding: 0.2em;
+}
+
+
+.form-grid {
+    display: inline-grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-gap: 0.5em;
+    align-items: start;
+}
+
+.label {
+    grid-column-start: 1;
+    padding: 0.2em;
+}
+
+.input {
+    grid-column-start: 2;
+}
+
+.submit-button {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    padding: 0.3em;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0;
+}
+
+ul li {
+    padding-bottom: 0.4em;
+}
