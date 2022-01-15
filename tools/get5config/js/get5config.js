@@ -148,7 +148,33 @@ function validateInputs() {
 }
 
 function assembleConfig() {
-    return get5MatchConfig;
+    let matchConfig = Object.assign({}, get5MatchConfig);
+    let otherTeam = Object.assign({}, opposingTeam);
+
+    let homeAway = document.querySelector('input[name="match-home-away"]:checked').value;
+    let team1 = null, team2 = null;
+    let teamStartingCT = document.querySelector('input[name="starting-side"]:checked').value;
+    if (homeAway == "home") {
+        team1 = fab5team;
+        team2 = otherTeam;
+        teamStartingCT = teamStartingCT == "ct" ? "team1_ct" : "team2_ct";
+    } else {
+        team1 = otherTeam;
+        team2 = fab5team;
+        teamStartingCT = teamStartingCT == "ct" ? "team2_ct" : "team1_ct";
+    }
+
+    let map = document.getElementById("maps").value;
+    let configFilename = document.getElementById("config-filename").value;
+    let matchId = configFilename.replace(/\.[^/.]+$/, "");
+
+    matchConfig.matchid = matchId;
+    matchConfig.team1 = team1;
+    matchConfig.team2 = team2;
+    matchConfig.maplist.push(map);
+    matchConfig.map_sides.push(teamStartingCT);
+
+    return matchConfig;
 }
 
 function generateConfig() {
@@ -159,7 +185,7 @@ function generateConfig() {
     let matchConfig = assembleConfig();
 
     // Serialise JSON object.
-    matchConfig = JSON.stringify(matchConfig, undefined, 2);
+    matchConfig = encodeURI(JSON.stringify(matchConfig, undefined, 2));
 
     // Create new file on the GitHub repository.
     let filename = document.getElementById("config-filename").value;
