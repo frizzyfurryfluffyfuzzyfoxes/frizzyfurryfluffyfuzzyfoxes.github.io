@@ -9,8 +9,7 @@ Date.prototype.yyyymmdd = function() {
 
   return [this.getFullYear(),
           (mm > 9 ? '' : '0') + mm,
-          (dd > 9 ? '' : '0') + dd
-         ].join('');
+          (dd > 9 ? '' : '0') + dd].join('');
 };
 
 let fab5team = {
@@ -26,6 +25,7 @@ let fab5team = {
         "STEAM_0:0:3541981": "Rövbitaren",
         "STEAM_1:0:16184259": "SGUU",
         "STEAM_1:0:12230325": "TrophicMonkey11",
+        "STEAM_1:0:540333376": "UpLinQ",
         "STEAM_1:0:2796426": "zarGoth"
     }
 };
