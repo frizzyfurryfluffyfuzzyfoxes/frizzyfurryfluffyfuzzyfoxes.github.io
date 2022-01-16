@@ -40,7 +40,7 @@ let get5MatchConfig = {
     "matchid": "",
     "num_maps": 1,
     "players_per_team": 5,
-    "min_players_to_ready": 10,
+    "min_players_to_ready": 1,
     "min_spectators_to_ready": 0,
     "spectators": {},
     "side_type": "standard",
