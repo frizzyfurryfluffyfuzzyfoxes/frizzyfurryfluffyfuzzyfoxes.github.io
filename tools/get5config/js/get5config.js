@@ -54,7 +54,7 @@ let get5MatchConfig = {
 
 const GitHub = (function() {
     function createFile(filename, content) {
-        const url = "https://github.com/frizzyfurryfluffyfuzzyfoxes/foxhole-server-configs/new/main/addons/sourcemod/configs/get5?filename=" + filename + "&value=" + content;
+        const url = "https://github.com/frizzyfurryfluffyfuzzyfoxes/foxhole-server-configs/new/main/cfg/?filename=" + filename + "&value=" + content;
         window.open(url, "_blank");
         return;
     }
@@ -76,8 +76,8 @@ function suggestConfigFilename() {
     opposingTeamName = sanitiseFilenameString(opposingTeamName);
 
     let suggestion = new Date().yyyymmdd() + "_" + (homeAwayStatus == "home"
-                                                    ? "Fab5v" + opposingTeamName + ".cfg"
-                                                    : opposingTeamName + "vFab5.cfg");
+                                                    ? "Fab5v" + opposingTeamName + ".json"
+                                                    : opposingTeamName + "vFab5.json");
     document.getElementById("config-filename").value = suggestion;
     return;
 }
@@ -109,7 +109,7 @@ function validateInputs() {
     let configFilename = document.getElementById("config-filename").value;
     if (configFilename === null
         || sanitiseFilenameString(configFilename) == ""
-        || !configFilename.endsWith(".cfg")) {
+        || !configFilename.endsWith(".json")) {
         console.error("Invalid config filename");
         return false;
     }
