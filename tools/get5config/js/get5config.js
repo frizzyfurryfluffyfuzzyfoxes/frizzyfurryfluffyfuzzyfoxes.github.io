@@ -15,19 +15,19 @@ Date.prototype.yyyymmdd = function() {
 let fab5team = {
     "name": "Fab5",
     "flag": "DK",
-    "players": {
-        "STEAM_1:1:141078": "Cywin",
-        "STEAM_1:0:18204824": "EcM4",
-        "STEAM_1:0:1619888": "karstn",
-        "STEAM_1:1:4160840": "Neth",
-        "STEAM_1:1:18685528": "Pardina",
-        "STEAM_0:1:19872352": "runtyrobot",
-        "STEAM_0:0:3541981": "Rövbitaren",
-        "STEAM_1:0:16184259": "SGUU",
-        "STEAM_1:0:12230325": "TrophicMonkey11",
-        "STEAM_1:0:540333376": "UpLinQ",
-        "STEAM_1:0:2796426": "zarGoth"
-    }
+    "players": [
+        "STEAM_1:1:141078",   // "Cywin",
+        "STEAM_1:0:18204824", // "EcM4",
+        "STEAM_1:0:1619888",  // "karstn",
+        "STEAM_1:1:4160840",  // "Neth",
+        "STEAM_1:1:18685528", // "Pardina",
+        "STEAM_0:1:19872352", // "runtyrobot",
+        "STEAM_0:0:3541981",  // "Rövbitaren",
+        "STEAM_1:0:16184259", // "SGUU",
+        "STEAM_1:0:12230325", // "TrophicMonkey11",
+        "STEAM_1:0:540333376",// "UpLinQ",
+        "STEAM_1:0:2796426"   // "zarGoth"
+    ]
 };
 
 let opposingTeam = {
@@ -54,7 +54,7 @@ let get5MatchConfig = {
 
 const GitHub = (function() {
     function createFile(filename, content) {
-        const url = "https://github.com/frizzyfurryfluffyfuzzyfoxes/foxhole-server-configs/new/main/cfg/?filename=" + filename + "&value=" + content;
+        const url = "https://github.com/frizzyfurryfluffyfuzzyfoxes/foxhole-server-configs/new/main/match/?filename=" + filename + "&value=" + content;
         window.open(url, "_blank");
         return;
     }
