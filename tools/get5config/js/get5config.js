@@ -54,7 +54,7 @@ let get5MatchConfig = {
 
 const GitHub = (function() {
     function createFile(filename, content) {
-        const url = "https://github.com/frizzyfurryfluffyfuzzyfoxes/foxhole-server-configs/new/main/match/?filename=" + filename + "&value=" + content;
+        const url = "https://github.com/frizzyfurryfluffyfuzzyfoxes/foxhole-server-configs/new/main/match/file?filename=" + filename + "&value=" + content;
         window.open(url, "_blank");
         return;
     }
