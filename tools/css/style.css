@@ -56,3 +56,7 @@ ul {
 ul li {
     padding-bottom: 0.4em;
 }
+
+table, th, td {
+    border: 1px solid black;
+}

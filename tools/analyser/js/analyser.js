@@ -1,0 +1,282 @@
+/**
+ * Fab5 Get5 analyser.
+ */
+
+ const BO2 = "BO2"; // matchCategory "a"
+ const BO3 = "BO3"; // matchCategory "c"
+
+class Match {
+    constructor(esportligaMatch, matchDetails) {
+        this.id = esportligaMatch.id;
+        this.time = esportligaMatch.time;
+        this.matchDetails = matchDetails;
+        this.teamA = esportligaMatch.matchTeams[0].team;
+        this.teamAScore = esportligaMatch.matchTeams[0].score;
+        this.teamB = esportligaMatch.matchTeams[1].team;
+        this.teamBScore = esportligaMatch.matchTeams[1].score;
+        this.type = esportligaMatch.matchCategory === "a" ? BO2 : BO3;
+        this.esportligaMatch = esportligaMatch;
+    }
+
+    matchCount() {
+        if (this.type === BO2) {
+            return 1;
+        }
+
+        return this.getSubScores().length;
+    }
+
+    getMatchTeams() {
+        return this.esportligaMatch.matchTeams;
+    }
+
+    toBo2Match() {
+        console.log(this.teamA)
+        console.log(this.teamB)
+        let match = {
+            id: this.id,
+            time: this.time,
+            map: this.matchDetails.mapName,
+            teamA: this.teamA.name + " (" + this.teamA.id + ")",
+            teamAelo: this.teamA.teamRankBeforeGame,
+            teamAScore: this.teamAScore,
+            teamBScore: this.teamBScore,
+            teamBelo: this.teamB.teamRankBeforeGame,
+            teamB: this.teamB.name + " (" + this.teamB.id + ")",
+        }
+
+        return match;
+    }
+
+    toBo3Matches() {
+        let matches = [];
+        let teams = this.getMatchTeams();
+        let scores = teams[0].subScores;
+        for(var i = 0; i < teams[0].subScores.length; i++) {
+            let match = {
+                id: this.id + "(" + scores[i].no + ")",
+                time: this.time,
+                map: this.matchDetails.maps[i].mapName,
+                teamA: this.teamA.name + " (" + this.teamA.id + ")",
+                teamAelo: this.teamA.teamRankBeforeGame,
+                teamAScore: teams[0].subScores[i].score,
+                teamBScore: teams[1].subScores[i].score,
+                teamBelo: this.teamB.teamRankBeforeGame,
+                teamB: this.teamB.name + " (" + this.teamB.id + ")",
+            };
+            matches.push(match);
+        }
+
+        return matches;
+    }
+
+    addToTable(table) {    
+        var matches = [];
+        if (this.type === BO2) {
+            let match = this.toBo2Match();
+            matches.push(match);
+        } else { // BO3
+            matches = this.toBo3Matches();
+        }
+
+        for (var i = 0; i < matches.length; i++) {
+            let row = createTableRow(matches[i]);
+            table.appendChild(row);
+        }
+    }
+}
+
+// Copied from https://stackoverflow.com/a/21149072
+var camelCaseToWords = function(str){
+    return str.match(/^[a-z]+|[A-Z][a-z]*/g).map(function(x){
+        return x[0].toUpperCase() + x.substr(1).toLowerCase();
+    }).join(' ');
+};
+
+function fetchTeam(teamId, callback) {
+    console.debug("Fetching team with id " + teamId);
+    $.get("https://app.esportligaen.dk/api/team/" + teamId + "?includeViewInfo=true", function(data, status) {
+        if (status === "success") {
+            callback(data);
+        } else {
+            console.error("Could not fetch team with id " + teamId + ". result=" + status);
+        }
+    })
+}
+
+function fetchMatch(matchId, callback) {
+    console.debug("Fetching match with id " + matchId);
+    $.get("https://app.esportligaen.dk/api/match/details/" + matchId, function(data, status) {
+        if (status === "success") {
+            callback(data);
+        } else {
+            console.error("Could not fetch match with id " + matchId + ". result=" + status);
+        }
+    })
+}
+
+function createTable(id) {
+    let table = document.createElement("table");
+    table.id = id;
+
+    return table;
+}
+
+function createTableHeader(tableContentValue) {
+    return createTableRow(tableContentValue, true);
+}
+
+function createTableRow(tableContentValue) {    
+    return createTableRow(tableContentValue, false);
+}
+
+function createTableRow(tableContentValue, isHeader) {
+    let columnNames = Array.isArray(tableContentValue) ? tableContentValue : getKeys(tableContentValue);
+    let headerRowElement = document.createElement("tr");
+    columnNames.forEach(function (columnName) {
+        var column;
+        if (isHeader) {
+            column = document.createElement("th");
+            column.textContent = Array.isArray(tableContentValue) ? columnName : camelCaseToWords(columnName);
+        } else {
+            column = document.createElement("td");
+            column.textContent = tableContentValue[columnName]
+        }
+
+        headerRowElement.appendChild(column);
+    });
+
+    return headerRowElement;
+}
+
+function createSection(id, titleSize, title) {
+    if (titleSize === null || titleSize <= 0) {
+        console.error("titleSize must be greater than 0");
+    }
+
+    removeExistingElement(id);
+
+    let section = document.createElement("div");
+    section.id = id;
+    let titleElement = document.createElement("h" + titleSize);
+    titleElement.textContent = title;
+    section.appendChild(titleElement);
+
+    return section
+}
+
+function removeExistingElement(id) {
+    let element = document.getElementById(id);
+    if (element === null) {
+        return;
+    } 
+    
+    element.remove();
+}
+
+function getKeys(map) {
+    let keys = []
+    for (var key in map) {
+        keys.push(key)
+    }
+    return keys;
+}
+
+function createMembers(members) {
+    if (members === null || members.length == 0) {
+        return null;
+    }
+
+    let section = createSection("members", 2, "Members")    
+    let tableHeader = null;
+
+    let membersTable = createTable("members-table")
+    for (var i in members) {
+        console.log(i)
+        let user = members[i].user;
+        if (tableHeader === null) {
+            tableHeader = createTableHeader(user);
+            membersTable.appendChild(tableHeader);
+        }
+
+        let row = createTableRow(user);
+        membersTable.appendChild(row);
+    }
+
+    section.appendChild(membersTable);
+    return section;
+}
+
+function createMatches(matchDtos) {
+    if (matchDtos === null || matchDtos.length == 0) {
+        return null;
+    }
+
+    let section = createSection("matches", 2, "Matches")    
+
+    let table = createTable("matches-table")
+    let columnNames = [
+        "Id",
+        "Time",
+        "Map",
+        "Team A",
+        "Team A ELO",
+        "Team A Score",
+        "Team B Score",
+        "Team B ELO",
+        "Team B",
+    ];
+    let headerRow = createTableHeader(columnNames);
+    table.appendChild(headerRow);
+
+    for (var i in matchDtos) {
+        let matchDto = matchDtos[i];
+        fetchMatch(matchDto.id, function(matchDetails) {
+            let match = new Match(matchDto, matchDetails)
+            match.addToTable(table);
+        })
+    }
+
+    section.appendChild(table);
+    return section;
+}
+
+function addMatchRow(table, matchDomain, mustCreateTableHeader) {
+    if (mustCreateTableHeader) {
+        tableHeader = createTableHeader(matchDomain);
+        table.appendChild(tableHeader);
+    }
+
+    let row = createTableRow(matchDomain);
+    table.appendChild(row);
+}
+
+function handleResults(team) {
+    let results = document.getElementById("results")
+
+    console.log(team);
+
+    results.appendChild(createMembers(team.members));
+    results.appendChild(createMatches(team.matches));
+
+}
+
+function doAnalyse(teamId) {
+    fetchTeam(teamId, handleResults)
+}
+
+function submit() {
+    let teamId = document.getElementById("team-id").value;
+
+    if (teamId === null) {
+        return false;
+    }
+
+    let results = document.getElementById("results")
+    let childNodes = results.childNodes;
+    childNodes.forEach(function (childNode) {
+        results.removeChild(childNode);
+    })
+    doAnalyse(teamId);
+
+}
