@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Frederik Bruhn Mikkelsen">
+    <title>Fab5 CS:GO competitive match config generator</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+  </head>
+  <body>
+    <h1>Fab5 CS:GO analyser</h1>
+    <div class="form-grid">
+      <span class="label">
+        Team to analyse (Team id):
+      </span>
+      <span class="input">
+        <input type="text" value="" name="Team" id="team-id">
+      </span>
+      <button class="submit-button" onclick="submit();">Analyse</button>
+    </div>
+
+    <h1>Results</h1>
+    <div id="results">
+    </div>
+    
+    <!-- Load JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/analyser.js">
+    </script>
+  </body>
+</html>
