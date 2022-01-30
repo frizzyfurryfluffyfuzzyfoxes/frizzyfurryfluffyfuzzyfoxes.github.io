@@ -152,6 +152,8 @@ function assembleConfig() {
     matchConfig.maplist = [];
     matchConfig.map_sides = [];
     let otherTeam = Object.assign({}, opposingTeam);
+    let opposingTeamName = document.getElementById("opposing-team-name").value;
+    otherTeam.name = opposingTeamName;
 
     let homeAway = document.querySelector('input[name="match-home-away"]:checked').value;
     let team1 = null, team2 = null;
