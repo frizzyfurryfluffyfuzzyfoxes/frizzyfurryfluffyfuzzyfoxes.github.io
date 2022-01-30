@@ -1,0 +1,81 @@
+/**
+ * Fab5 style sheet definition
+ */
+@import url(//fonts.googleapis.com/css?family=Vibur);
+html,body{
+    height:100%
+}
+
+body {
+    background: #112 url(../images/wall.jpg) center no-repeat;
+    background-size: cover;
+    margin: 0;
+}
+
+.logo {
+  text-align: center;
+  width: 65%;
+  height: 250px;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  user-select: none;
+}
+
+.logo .notice {
+    font-size: 3vh;
+    font-weight: 400;
+    font-family: 'Kalam', cursive;
+    color: #fee;
+    text-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #ffaa22, 0 0 0.5em #ffaa22, 0 0 0.1em #ffaa22, 0 10px 3px #000;
+}
+
+.logo .animation {
+    font-size: 19vh;
+    font-weight: 400;
+    font-family: 'Kalam', cursive;
+    color: #fee;
+    text-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #ffaa22, 0 0 0.5em #ffaa22, 0 0 0.1em #ffaa22, 0 10px 3px #000;
+}
+.logo .animation span{
+    animation: blink linear infinite 10s;
+}
+.logo .animation span:nth-of-type(2){
+    animation: blink linear infinite 12s;
+}
+
+@keyframes blink {
+  78% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  79%{
+     color: #333;
+  }
+  80% {
+    text-shadow: none;
+  }
+  81% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  82% {
+    color: #333;
+    text-shadow: none;
+  }
+  83% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  92% {
+    color: #333;
+    text-shadow: none;
+  }
+  92.5% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+}

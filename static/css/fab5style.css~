@@ -1,0 +1,38 @@
+/**
+ * Fab5 style sheet definition
+ */
+body {
+    background: #000 url(../images/neon-fox3.jpg) no-repeat fixed center;
+    color: #fff;
+    font-size: 0.875rem;
+}
+
+.stage {
+    height: 200px;
+    width: 60%;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.framebox {
+    width: 80%;
+    padding: 20px;
+    border: 2px solid red;
+    background-color: #000;
+    border-radius: 0.5em;
+    -webkit-box-shadow: 0 0 17px 3px #c600eb,0 0 4px 2px #c600eb;
+    box-shadow: 0 0 17px 3px #c600eb,0 0 4px 2px #c600eb;
+    z-index: -1;
+    -webkit-animation-name: gradient-shadow;
+    animation-name: gradient-shadow;
+    -webkit-animation-timing-function: ease;
+    animation-timing-function: ease;
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+}
