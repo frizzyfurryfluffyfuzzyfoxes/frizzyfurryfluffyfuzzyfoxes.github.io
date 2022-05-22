@@ -2,8 +2,8 @@
  * Fab5 Get5 analyser.
  */
 
- const BO2 = "BO2"; // matchCategory "a"
- const BO3 = "BO3"; // matchCategory "c"
+const BO2 = "BO2"; // matchCategory "a"
+const BO3 = "BO3"; // matchCategory "c"
 
 class Match {
     constructor(esportligaMatch, matchDetails) {
@@ -58,11 +58,13 @@ class Match {
                 time: this.time,
                 map: this.matchDetails.maps[i].mapName,
                 teamA: this.teamA.name + " (" + this.teamA.id + ")",
+                teamAId: this.teamA.id,
                 teamAelo: this.teamA.teamRankBeforeGame,
                 teamAScore: teams[0].subScores[i].score,
                 teamBScore: teams[1].subScores[i].score,
                 teamBelo: this.teamB.teamRankBeforeGame,
                 teamB: this.teamB.name + " (" + this.teamB.id + ")",
+                teamBId: this.teamB.id
             };
             matches.push(match);
         }
@@ -207,12 +209,124 @@ function createMembers(members) {
     return section;
 }
 
+function createMapStats(team) {
+    if (team === null) {
+        return null;
+    }
+
+    let matchDtos = team.matches;
+    if (matchDtos === null || matchDtos.length == 0) {
+        return null;
+    }
+
+    let section = createSection("map-stats", 2, "Map Stats")
+
+    let table = createTable("map-stats-table")
+    let columnNames = [
+        "Map",
+        "Played",
+        "Win Rate",
+        "Pick Rate"
+    ];
+    let headerRow = createTableHeader(columnNames);
+    table.appendChild(headerRow);
+
+    let stats = {
+        totalMaps: matchDtos.length + 1,
+        totalPicks: 0,
+        picks: {} // { map: "map", wins: 0, pickCount: 0 }
+    }
+    let detailedMatches = [];
+    for (var i in matchDtos) {
+        let matchDto = matchDtos[i];
+        fetchMatch(matchDto.id, function(matchDetails) {
+            let match = new Match(matchDto, matchDetails)
+            detailedMatches.push({team: team, match: match});
+
+            //console.warn(detailedMatches)
+            if (detailedMatches.length === matchDtos.length) {
+                for (var j in detailedMatches) {
+                    addPick(stats, detailedMatches[j])
+                }
+                console.warn(stats)
+
+                var statRows = compileStats(stats);
+                console.warn(statRows)
+
+                statRows.forEach(function (row) {
+                    table.appendChild(createTableRow(row))
+                })
+            }
+        })
+    }
+
+    section.appendChild(table);
+    return section;
+}
+
+function compileStats(stats) {
+    let rows = [];
+    let mapNames = getKeys(stats.picks);
+    for (var i in mapNames) {
+        let mapStats = stats.picks[mapNames[i]];
+        let row = {
+            map: mapNames[i],
+            played: mapStats.count,
+            winRate: (mapStats.wins / mapStats.count * 100).toFixed(2),
+            pickRate: (mapStats.pickCount / stats.totalPicks * 100).toFixed(2)
+        };
+
+        rows.push(row)
+    }
+
+    return rows;
+}
+
+function addPick(stats, detailedMatch) {
+    let match = detailedMatch.match
+    console.warn(match)
+    if (match.type === BO2) {
+        let bo2Match = match.toBo2Match();
+        let didAnalysedTeamPickedMap = detailedMatch.team.id == match.teamA.id;
+        handleSingleMatch(didAnalysedTeamPickedMap, stats, bo2Match);
+    } else if (match.type === BO3) {
+        let bo3Match = match.toBo3Matches();
+        for(var i in bo3Match) {
+            let subMatch = bo3Match[i];
+            let didAnalysedTeamPickedMap = detailedMatch.team.id == subMatch.teamAId;
+            handleSingleMatch(didAnalysedTeamPickedMap, stats, subMatch);
+        }
+    }
+}
+
+function handleSingleMatch(didAnalysedTeamPickedMap, stats, match) {
+    let map = stats.picks[match.map];
+    console.warn(map)
+    if (map == undefined || map == null) {
+        stats.picks[match.map] = { count: 0, wins: 0, pickCount: 0 };
+    }
+
+    if (didAnalysedTeamPickedMap) {
+        stats.totalPicks++;
+        stats.picks[match.map].pickCount++;
+        if (match.teamAScore > match.teamBScore) {
+            stats.picks[match.map].wins++;
+        }
+    }
+
+    if (match.teamBScore > match.teamAScore) {
+        stats.picks[match.map].wins++;
+    }
+
+    stats.picks[match.map].count++;
+}
+
 function createMatches(matchDtos) {
     if (matchDtos === null || matchDtos.length == 0) {
         return null;
     }
 
-    let section = createSection("matches", 2, "Matches")    
+    let section = createSection("matches", 2, "Matches")
 
     let table = createTable("matches-table")
     let columnNames = [
@@ -253,10 +367,10 @@ function addMatchRow(table, matchDomain, mustCreateTableHeader) {
 
 function handleResults(team) {
     let results = document.getElementById("results")
-
     console.log(team);
 
     results.appendChild(createMembers(team.members));
+    results.appendChild(createMapStats(team));
     results.appendChild(createMatches(team.matches));
 
 }
