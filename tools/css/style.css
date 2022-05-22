@@ -61,7 +61,16 @@ table, th, td {
     border: 1px solid black;
 }
 
+table {
+    margin-bottom: 10px
+}
+
 td, th {
     padding-left: 10px;
     padding-right: 10px;
+}
+
+#map-state-note {
+    font-style: italic;
+    font-weight: 600;
 }

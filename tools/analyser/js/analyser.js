@@ -37,12 +37,14 @@ class Match {
             id: this.id,
             time: this.time,
             map: this.matchDetails.mapName,
-            teamA: this.teamA.name + " (" + this.teamA.id + ")",
+            teamAId: this.teamA.id,
+            teamA: this.teamA.name,
             teamAelo: this.teamA.teamRankBeforeGame,
             teamAScore: this.teamAScore,
             teamBScore: this.teamBScore,
             teamBelo: this.teamB.teamRankBeforeGame,
-            teamB: this.teamB.name + " (" + this.teamB.id + ")",
+            teamB: this.teamB.name,
+            teamBId: this.teamB.id
         }
 
         return match;
@@ -57,13 +59,13 @@ class Match {
                 id: this.id + "(" + scores[i].no + ")",
                 time: this.time,
                 map: this.matchDetails.maps[i].mapName,
-                teamA: this.teamA.name + " (" + this.teamA.id + ")",
                 teamAId: this.teamA.id,
+                teamA: this.teamA.name,
                 teamAelo: this.teamA.teamRankBeforeGame,
                 teamAScore: teams[0].subScores[i].score,
                 teamBScore: teams[1].subScores[i].score,
                 teamBelo: this.teamB.teamRankBeforeGame,
-                teamB: this.teamB.name + " (" + this.teamB.id + ")",
+                teamB: this.teamB.name,
                 teamBId: this.teamB.id
             };
             matches.push(match);
@@ -221,6 +223,12 @@ function createMapStats(team) {
 
     let section = createSection("map-stats", 2, "Map Stats")
 
+    let mainStatsTable = createTable("stats-table")
+    mainStatsTable.appendChild(createTableHeader([
+        "Total Maps",
+        "Win rate"
+    ]));
+
     let table = createTable("map-stats-table")
     let columnNames = [
         "Map",
@@ -234,6 +242,7 @@ function createMapStats(team) {
     let stats = {
         totalMaps: matchDtos.length + 1,
         totalPicks: 0,
+        wins: 0,
         picks: {} // { map: "map", wins: 0, pickCount: 0 }
     }
     let detailedMatches = [];
@@ -250,6 +259,11 @@ function createMapStats(team) {
                 }
                 console.warn(stats)
 
+                mainStatsTable.appendChild(createTableRow({
+                    totalWins: stats.totalMaps,
+                    winRate: (stats.wins / stats.totalMaps * 100).toFixed(2)
+                }))
+
                 var statRows = compileStats(stats);
                 console.warn(statRows)
 
@@ -260,7 +274,12 @@ function createMapStats(team) {
         })
     }
 
+    section.appendChild(mainStatsTable);
     section.appendChild(table);
+    let note = document.createElement("p");
+    note.id = "map-state-note"
+    note.textContent = "Note: BO3 matches are not supported as Esportligaen does not indicate who picked which map."
+    section.appendChild(note)
     return section;
 }
 
@@ -290,16 +309,21 @@ function addPick(stats, detailedMatch) {
         let didAnalysedTeamPickedMap = detailedMatch.team.id == match.teamA.id;
         handleSingleMatch(didAnalysedTeamPickedMap, stats, bo2Match);
     } else if (match.type === BO3) {
-        let bo3Match = match.toBo3Matches();
-        for(var i in bo3Match) {
-            let subMatch = bo3Match[i];
-            let didAnalysedTeamPickedMap = detailedMatch.team.id == subMatch.teamAId;
-            handleSingleMatch(didAnalysedTeamPickedMap, stats, subMatch);
-        }
+        console.log("BO3 match not supported. MatchId = " + match.id)
+        console.log(match.toBo3Matches())
+//        let bo3Match = match.toBo3Matches();
+//        for(var i in bo3Match) {
+//            let subMatch = bo3Match[i];
+//            let didAnalysedTeamPickedMap = detailedMatch.team.id == subMatch.teamAId;
+//            handleSingleMatch(didAnalysedTeamPickedMap, stats, subMatch);
+//        }
     }
 }
 
 function handleSingleMatch(didAnalysedTeamPickedMap, stats, match) {
+    if (match.map == null) {
+        match.map = "(No show)"
+    }
     let map = stats.picks[match.map];
     console.warn(map)
     if (map == undefined || map == null) {
@@ -311,11 +335,13 @@ function handleSingleMatch(didAnalysedTeamPickedMap, stats, match) {
         stats.picks[match.map].pickCount++;
         if (match.teamAScore > match.teamBScore) {
             stats.picks[match.map].wins++;
+            stats.wins++;
         }
     }
 
     if (match.teamBScore > match.teamAScore) {
         stats.picks[match.map].wins++;
+        stats.wins++;
     }
 
     stats.picks[match.map].count++;
@@ -333,12 +359,14 @@ function createMatches(matchDtos) {
         "Id",
         "Time",
         "Map",
+        "Team A Id",
         "Team A",
         "Team A ELO",
         "Team A Score",
         "Team B Score",
         "Team B ELO",
         "Team B",
+        "Team B Id"
     ];
     let headerRow = createTableHeader(columnNames);
     table.appendChild(headerRow);
